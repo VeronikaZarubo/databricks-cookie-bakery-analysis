@@ -1,161 +1,68 @@
 # Databricks Cookie Bakery Analysis
 
-## Project Overview
+## About the Project
 
-This project explores sales data from the simulated Bakehouse dataset available in Databricks Free Edition. It uses SQL to analyze product performance, compare revenue across countries, and identify cities with the highest average line-item revenue.
+This project explores sales and customer review data from the Databricks Bakehouse sample dataset. I used SQL in Databricks to analyse product sales, revenue across different locations and customer review sentiment. I also built a Power BI dashboard to present the results visually.
 
-The project is inspired by Noah Sommerfeld's tutorial, *3 Free Databricks Analytics Projects You Can Do In An Afternoon*, and focuses on developing practical SQL skills through business-oriented questions.
+The goal was to practise working with data in Databricks, use AI to classify customer feedback and turn the results into something useful for business decision-making.
 
-**Project status:** SQL analysis in progress. Dashboard and report creation are planned.
+## Tools Used
 
-## Objectives
+- **Databricks SQL** — querying and analysing the sample data
+- **Databricks AI Functions** — using `ai_query()` to classify customer reviews
+- **Power BI** — building an interactive dashboard
+- **GitHub** — version control and project documentation
 
-- Identify the best-selling products by units sold and revenue.
-- Compare total revenue, sales volume, and transaction line counts across countries.
-- Analyze average line-item revenue by city.
-- Identify the highest-average-revenue city within each country.
-- Prepare the analysis for a future dashboard and business report.
+## What I Worked On
 
-## Tools and Technologies
+### 1. Sales Analysis
 
-- **Databricks Free Edition** — data exploration and SQL execution.
-- **Databricks SQL** — aggregations, joins, sorting, and window functions.
-- **GitHub** — version control and project documentation.
-- **AI/BI Dashboards** — planned for visualizing the analysis.
+Using the Bakehouse sales data, I explored:
 
-## Dataset
+- Best-selling products and revenue by product
+- Revenue and sales activity by country
+- Average sales line-item revenue by city
+- The city with the highest average line-item revenue in each country
 
-The project uses sample data available in the Databricks `samples.bakehouse` schema.
+These queries helped me practise aggregations, joins, common table expressions (CTEs) and window functions in SQL.
 
-| Table | Purpose |
-|---|---|
-| `sales_transactions` | Product, quantity, unit price, and franchise identifier data. |
-| `sales_franchises` | Franchise location information, including city and country. |
+### 2. Customer Review Sentiment Analysis
 
-The analysis uses the existing Databricks sample dataset; no separate dataset upload is required.
+I used Databricks' `ai_query()` function with the `databricks-llama-4-maverick` model to classify customer reviews as positive, negative or neutral.
 
-## Business Questions
+I then grouped the results to calculate review counts and percentages. I also worked on cleaning the model output so labels with extra punctuation would not be counted as separate categories.
 
-### 1. Which products sell the most?
+AI-generated classifications can be imperfect, so the results should be checked before using them to make business decisions.
 
-The first query groups sales by product and calculates:
+### 3. Power BI Dashboard
 
-- **Units sold:** total quantity sold per product.
-- **Revenue:** total quantity multiplied by unit price.
+I built a Power BI dashboard to make the analysis easier to explore and understand.
 
-Products are sorted by revenue in descending order to identify the highest-revenue products.
+The dashboard brings the results into a visual format, making it easier to compare sales performance across products and locations and review the customer sentiment breakdown.
 
-### 2. Which countries generate the most revenue?
+## Repository Structure
 
-The second query joins sales transactions with franchise locations and aggregates results by country.
+```text
+databricks-cookie-bakery-analysis/
+├── README.md
+└── report/
+    └── bakehouse_sales_report.pdf
+└── sql/
+    └── analysis_queries.sql
+```
 
-Metrics include:
+## How to Explore the Project
 
-- **Total revenue:** sum of quantity multiplied by unit price.
-- **Transaction line count:** number of sales rows in the dataset for each country.
-- **Units sold:** total quantity sold.
+1. Open the SQL file to review the queries used for the analysis.
+2. Run the queries in Databricks with access to the `samples.bakehouse` tables.
+3. Explore the Power BI dashboard to see the results visually.
 
-This comparison helps identify countries with the highest total sales revenue and provides additional context about sales volume.
+The SQL queries use Databricks' sample Bakehouse data, so access to the relevant sample tables and AI model is required to reproduce the analysis.
 
-*Note: The line count represents rows in the transaction table, not necessarily distinct transactions.*
+## What I Learned
 
-### 3. Which cities have the highest average line-item revenue?
+Through this project, I practised writing SQL for business analysis, joining datasets, ranking results with window functions, using AI functions for sentiment classification, cleaning model output and presenting findings in Power BI.
 
-The third query groups sales by country and city and calculates average line-item revenue using:
+## Reference
 
-`AVG(quantity * unitPrice)`
-
-The results are sorted in descending order to highlight cities with the highest average line-item values.
-
-This metric represents average revenue per sales row, not necessarily average revenue per complete customer transaction.
-
-### 4. Which city ranks highest within each country?
-
-The fourth query uses a common table expression (CTE) and the `ROW_NUMBER()` window function to rank cities within each country by average line-item revenue.
-
-Only the top-ranked city in each country is returned.
-
-This makes it possible to compare the highest-average-revenue city across different countries.
-
-## SQL Analysis
-
-The SQL queries are maintained in:
-
-`sql/analysis_queries.sql`
-
-The analysis demonstrates the following SQL techniques:
-
-- Aggregation using `SUM()`, `AVG()`, and `COUNT()`.
-- Revenue calculations and numeric rounding.
-- Inner joins between sales and location tables.
-- Grouping and sorting results.
-- Common table expressions (CTEs).
-- Window functions using `ROW_NUMBER()` and `PARTITION BY`.
-
-## Planned Deliverables
-
-The following work is planned and has not yet been marked as completed.
-
-- [ ] Execute and validate all SQL queries.
-- [ ] Record verified findings and business insights.
-- [ ] Build a Databricks AI/BI dashboard with key sales metrics.
-- [ ] Add visualizations for product revenue and sales by country.
-- [ ] Compare average line-item revenue across cities.
-- [ ] Capture dashboard screenshots and add them to the repository.
-- [ ] Create a written business report summarizing the findings and recommendations.
-
-## Planned Dashboard
-
-The dashboard is intended to provide a visual overview of bakery sales performance.
-
-Potential components include:
-
-- KPI cards for total revenue, units sold, and sales line count.
-- A bar chart showing revenue by product.
-- A country-level comparison of revenue and units sold.
-- A city-level comparison of average line-item revenue.
-- A ranked view of the highest-average-revenue city in each country.
-
-The final dashboard design will depend on the results and the most useful business insights identified during analysis.
-
-## Planned Business Report
-
-Once the queries have been validated, a business report will summarize:
-
-1. The strongest-performing products.
-2. Revenue distribution across countries.
-3. Differences in average line-item revenue across cities.
-4. The highest-ranked city within each country.
-5. Potential business implications and recommendations supported by the results.
-
-No findings or recommendations are reported here yet; these will be added after the analysis has been executed and reviewed.
-
-## How to Reproduce the Analysis
-
-1. Create or access a Databricks Free Edition workspace.
-2. Open Catalog Explorer and locate the `samples.bakehouse` schema.
-3. Open the SQL editor.
-4. Run the queries from `sql/analysis_queries.sql`.
-5. Review the output and verify the calculations.
-6. Document the findings before creating the planned dashboard and business report.
-
-## Learning Outcomes
-
-This project provides practical experience with:
-
-- SQL-based business analysis.
-- Sales revenue and product performance metrics.
-- Joining transactional data with geographic information.
-- Aggregation and ranking techniques.
-- Git-based project organization and documentation.
-- Preparing analytical results for business reporting and visualization.
-
-## References
-
-- [Databricks Free Edition](https://www.databricks.com/product/free-edition)
-- [Databricks Documentation](https://docs.databricks.com/)
-- Noah Sommerfeld, *3 Free Databricks Analytics Projects You Can Do In An Afternoon*.
-
----
-
-**Current status:** SQL query development and project documentation. Dashboard creation and business report preparation are planned next.
+This project was inspired by Noah Sommerfeld's Databricks tutorial, *3 Free Databricks Analytics Projects You Can Do In An Afternoon*.
